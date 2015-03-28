@@ -148,10 +148,10 @@
 							<div class="col-sm-9">
 								<input class="input" name="realname" class="input" value="<%= defaults.realname %>">
 							</div>
-							<div class="col-sm-3">
+							<div class="col-sm-3" <%= !channelsActionable ? 'style="display: none;"' : ''%>>
 								<label>Channels</label>
 							</div>
-							<div class="col-sm-9">
+							<div class="col-sm-9" <%= !channelsActionable ? 'style="display: none;"' : ''%>>
 								<input class="input" name="join" class="input" value="<%= defaults.join %>">
 							</div>
 							<div class="col-sm-3 clearfix"></div>
