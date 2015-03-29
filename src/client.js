@@ -222,6 +222,7 @@ Client.prototype.connect = function(args) {
 
 Client.prototype.input = function(data) {
 	var client = this;
+	var config = Helper.getConfig();
 	var text = data.text.trim();
 	var target = client.find(data.target);
 	if (text.charAt(0) !== "/") {
@@ -237,7 +238,8 @@ Client.prototype.input = function(data) {
 				target.network,
 				target.chan,
 				cmd,
-				args
+				args,
+                config
 			]);
 		} catch (e) {
 			console.log(path + ": " + e);

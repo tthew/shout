@@ -75,6 +75,17 @@ module.exports = {
 	//
 	displayNetwork: true,
 
+    //
+    // Channels actinable
+    //
+    // If set to false Shout will not expose channels in login
+    // form, and not allow leaving and joining of channels from client
+    //
+    // @type     boolean
+    // @default  true
+    //
+    channelsActionable: true,
+
 	//
 	// Log settings
 	//

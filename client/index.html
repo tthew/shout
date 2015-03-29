@@ -20,7 +20,7 @@
 	<link rel="apple-touch-icon" sizes="120x120" href="/img/apple-touch-icon-120x120.png">
 
 	</head>
-	<body class="<%= public ? "public" : "" %>">
+	<body class="<%= public ? "public" : "" %>" data-channels_actionable="<%= channelsActionable %>">
 
 	<div id="wrap">
 	<div id="viewport">
@@ -148,10 +148,10 @@
 							<div class="col-sm-9">
 								<input class="input" name="realname" class="input" value="<%= defaults.realname %>">
 							</div>
-							<div class="col-sm-3">
+							<div class="col-sm-3" <%= !channelsActionable ? 'style="display: none;"' : ''%>>
 								<label>Channels</label>
 							</div>
-							<div class="col-sm-9">
+							<div class="col-sm-9" <%= !channelsActionable ? 'style="display: none;"' : ''%>>
 								<input class="input" name="join" class="input" value="<%= defaults.join %>">
 							</div>
 							<div class="col-sm-3 clearfix"></div>
@@ -214,10 +214,20 @@
 							<div class="col-sm-12">
 								<h2>Visual Aids</h2>
 							</div>
-							<div class="col-sm-12">
+							<div class="col-sm-6">
 								<label class="opt">
 									<input type="checkbox" name="colors">
-									Enable colored nicknames
+									Enable colored nicks
+								</label>
+							</div>
+							<div class="col-sm-6">
+								<label class="opt">
+									<select name="theme">
+										<option value="-">Choose theme...</option>
+										<% _.each(themes, function(t) { %>
+											<%= "<option>" + t + "</option>" %>
+										<% }); %>
+									</select>
 								</label>
 							</div>
 							<% if (typeof prefetch === "undefined" || prefetch !== false) { %>

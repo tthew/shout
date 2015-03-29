@@ -381,9 +381,27 @@ $(function() {
 		}
 	});
 
+	settings.on("change", "select", function() {
+		var self = $(this);
+		var name = self.attr("name");
+		if(self.val() == "-") {
+			return;
+		}
+
+		options[name] = self.val();
+		$.cookie(
+			"settings",
+			options, {
+				expires: expire(365)
+			}
+		);
+		$("#theme").prop("href", "themes/" + self.val() + ".css");
+	});
+
 	var viewport = $("#viewport");
 
 	viewport.on("click", ".lt, .rt", function(e) {
+console.log('inside viewport.on click .lt, .rt');
 		var self = $(this);
 		viewport.toggleClass(self.attr("class"));
 		if (viewport.is(".lt, .rt")) {
@@ -402,13 +420,19 @@ $(function() {
 	var submit = $("#submit");
 
 	form.on("submit", function(e) {
+
 		e.preventDefault();
 		var text = input.val();
+
 		input.val("");
+
+        // Hide previous text in Channel
 		if (text.indexOf("/clear") === 0) {
 			clear();
 			return;
 		}
+
+        // Send text to socket
 		socket.emit("input", {
 			target: chat.data("id"),
 			text: text
@@ -416,6 +440,7 @@ $(function() {
 	});
 
 	chat.on("click", ".messages", function() {
+console.log('inside chat.on click .messages')
 		setTimeout(function() {
 			var text = "";
 			if (window.getSelection) {
@@ -440,12 +465,22 @@ $(function() {
 
 	var top = 1;
 	sidebar.on("click", ".chan, button", function() {
+
 		var self = $(this);
 		var target = self.data("target");
 		if (!target) {
 			return;
 		}
 
+        // Hide Chan / Network close buttons
+        // probably not be ideal way to do this
+        // https://github.com/erming/shout/issues/384
+        if (!$('body').data('channels_actionable')) {
+            sidebar.find('span.close').hide();
+            chat.find('button.close').hide();
+        }
+
+        // Update Chat DOM elem
 		chat.data(
 			"id",
 			self.data("id")
@@ -455,6 +490,7 @@ $(function() {
 			self.data("id")
 		);
 
+        // UI - Update sidebar button state
 		sidebar.find(".active").removeClass("active");
 		self.addClass("active")
 			.find(".badge")
@@ -462,6 +498,7 @@ $(function() {
 			.data("count", "")
 			.empty();
 
+        // UI - Update favicon
 		if (sidebar.find(".highlight").length === 0) {
 			favico.badge("");
 		}
@@ -469,6 +506,7 @@ $(function() {
 		viewport.removeClass("lt");
 		$("#windows .active").removeClass("active");
 
+        // Select Channel DOM to update
 		var chan = $(target)
 			.addClass("active")
 			.trigger("show")
@@ -477,12 +515,14 @@ $(function() {
 			.sticky()
 			.end();
 
+        // UI - Update page title
 		var title = "Shout";
 		if (chan.data("title")) {
 			title = chan.data("title") + " — " + title;
 		}
 		document.title = title;
 
+        // 
 		if (self.hasClass("chan")) {
 			var nick = self
 				.closest(".network")
@@ -498,11 +538,14 @@ $(function() {
 	});
 
 	sidebar.on("click", "#sign-out", function() {
+console.log('inside sidebar.on click #sign-out');
 		$.removeCookie("token");
 		location.reload();
 	});
 
 	sidebar.on("click", ".close", function() {
+console.log('inside sidebar.on click .close');
+
 		var cmd = "/close";
 		var chan = $(this).closest(".chan");
 		if (chan.hasClass("lobby")) {
@@ -552,6 +595,7 @@ $(function() {
 	});
 
 	chat.on("click", ".close", function() {
+console.log('clicked on da chat.on item');
 		var id = $(this)
 			.closest(".chan")
 			.data("id");
